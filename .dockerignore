@@ -1,0 +1,9 @@
+.git
+node_modules
+.env
+build
+*yml
+.dockerignore
+.eslintcache
+Dockerfile
+yarn-error.log

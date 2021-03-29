@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  reddit-service-backend:
+    image: reddit-service-backend:latest
+    restart: unless-stopped
+    environment:
+      NODE_ENV: 'development'
