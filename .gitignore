@@ -4,3 +4,4 @@ yarn-error.log
 
 docker-compose.override.yml
 build
+.env

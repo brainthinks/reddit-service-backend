@@ -12,6 +12,8 @@ A service to manage users who want the top posts of their favorite subreddits se
 ## Getting Started
 
 1. `docker build -t reddit-service-backend:latest .`
+1. `cp .env.example .env`
+1. Configure `.env`
 1. `docker-compose down && docker-compose up`
 1. navigate to [https://localhost](http://localhost)
 
@@ -20,5 +22,7 @@ A service to manage users who want the top posts of their favorite subreddits se
 
 1. `docker-compose build`
 1. `cp docker-compose.dev.yml docker-compose.override.yml`
+1. 1. `cp .env.example .env`
+1. Configure `.env`
 1. `docker-compose down && docker-compose up`
 1. navigate to [https://localhost](http://localhost)
