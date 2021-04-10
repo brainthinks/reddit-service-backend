@@ -6,6 +6,15 @@ import { createTerminus } from '@godaddy/terminus';
 // local imports
 import { Logger } from './logger';
 import { Config } from './config';
+import {
+  requestLogger,
+  errorHandler,
+} from './middleware/';
+import routers from './modules/routers';
+
+/* eslint-disable @typescript-eslint/no-var-requires */
+const packageJson = require('../package.json');
+/* eslint-enable @typescript-eslint/no-var-requires */
 
 let server: Server;
 
@@ -39,7 +48,7 @@ export default class Server {
     this.server = http.createServer(this.app);
   }
 
-  start (): this {
+  async start (): Promise<this> {
     createTerminus(this.server, {
       signals: [
         'SIGTERM',
@@ -50,8 +59,8 @@ export default class Server {
         '/healthcheck': this.healthCheck,
         __unsafeExposeStackTraces: !this.config.isProductionMode,
       },
-      onSignal: this.onSignal,
-      onShutdown: this.onShutdown,
+      onSignal: this.onSignal.bind(this),
+      onShutdown: this.onShutdown.bind(this),
       logger: (msg, err) => {
         if (msg) {
           this.logger.warn(msg);
@@ -63,26 +72,51 @@ export default class Server {
       },
     });
 
-    this.server.listen(this.config.port, () => {
-      this.logger.info(`Example app listening at ${this.config.protocol}://${this.config.host}:${this.config.port}`);
+    this.app.use(requestLogger(this.logger));
+
+    for (let i = 0; i < routers.length; i++) {
+      const router = routers[i];
+
+      this.app.use(router.path, router.router);
+    }
+
+    this.app.get('*', (req, res) => {
+      res.status(404).send({
+        error: `requested path '${req.path}' not found`,
+      });
     });
 
-    this.app.get('/', (req, res) => {
-      res.send('Hello World!');
+    this.app.use(errorHandler(this.logger));
+
+    await new Promise<void>((resolve, reject) => {
+      this.server.listen(this.config.port, () => {
+        this.logger.info(`${packageJson.name} listening at ${this.config.protocol}://${this.config.host}:${this.config.port}`);
+        resolve();
+      });
     });
 
     return this;
   }
 
+  // @todo - does http server close have a callback or some other way to know
+  // when it's really finished?
+  stop (): void {
+    this.server.close();
+  }
+
+  destroy (): void {
+    this.stop();
+  }
+
   private async onSignal () {
-    this.logger.info('server is starting cleanup');
+    this.logger.info('server is shutting down');
     return Promise.all([
-      () => this.server.close(),
+      () => this.destroy(),
     ]);
   }
 
   private async onShutdown () {
-    this.logger.info('cleanup finished, server is shutting down');
+    this.logger.info('server has stopped');
   }
 
   private async healthCheck () {
