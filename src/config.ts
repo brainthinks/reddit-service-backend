@@ -104,7 +104,7 @@ export default function getConfig (logger: Logger): Config {
         true,
         false,
       ],
-      coerce: (arg: any) => arg === 1,
+      coerce: (arg: any) => arg === '1',
       nargs: 1,
       demandOption: true,
     })

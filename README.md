@@ -7,6 +7,7 @@ A service to manage users who want the top posts of their favorite subreddits se
 
 - [Getting Started](#getting-started)
 - [Development](#development)
+- [Future Improvements](#future-improvements)
 
 
 ## Getting Started
@@ -26,3 +27,11 @@ A service to manage users who want the top posts of their favorite subreddits se
 1. Configure `.env`
 1. `docker-compose down && docker-compose up`
 1. navigate to [https://localhost](http://localhost)
+
+## Future Improvements
+
+* API tests
+* Authentication (API Gateway, OIDC, keycloak)
+* SSL Termination (ability to serve over https)
+* Improved Auditing.  Right now, only the last modification to a record is saved.
+* Support for socket connections for real-time updates

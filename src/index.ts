@@ -17,9 +17,13 @@ async function main () {
 
   const config = getConfig(logger);
 
+  if (config.protocol === 'https') {
+    throw new Error('https not yet supported :(');
+  }
+
   const server = Server.asSingleton(logger, config);
 
-  server.start();
+  await server.start();
 }
 
 main().catch((error) => {
