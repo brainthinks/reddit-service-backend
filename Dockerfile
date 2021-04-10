@@ -8,7 +8,7 @@ WORKDIR /opt/reddit-service-backend
 # Stage: development ----------------------------------------------------------
 FROM base as development
 
-CMD ["npx", "ts-node-dev", "--respawn", "src/index.ts"]
+CMD ["yarn", "run", "watch"]
 
 # Stage: default --------------------------------------------------------------
 FROM base

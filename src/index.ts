@@ -1,66 +1,37 @@
-// node imports
-import http from 'http';
-// 3rd party imports
-import express from 'express';
-import { createTerminus } from '@godaddy/terminus';
-// local imports
+/*
+  eslint-disable
+
+  no-console,
+  no-process-exit
+*/
+
 import createLogger from './logger';
-import {
-  isProductionMode,
-  protocol,
-  hostname,
-  port,
-} from './env';
+import Server from './server';
+import getConfig from './config';
+import { Logger } from './logger';
 
-const logger = createLogger();
-const app = express();
-const server = http.createServer(app);
+let logger: Logger;
 
-async function onSignal () {
-  logger.info('server is starting cleanup');
-  return Promise.all([
-    () => server.close(),
-  ]);
+async function main () {
+  logger = createLogger();
+
+  const config = getConfig(logger);
+
+  const server = Server.asSingleton(logger, config);
+
+  server.start();
 }
 
-async function onShutdown () {
-  logger.info('cleanup finished, server is shutting down');
-}
+main().catch((error) => {
+  if (logger === undefined) {
+    console.error(error);
+    console.error('Fatal error during bootstrap');
+    process.exit(1);
+  }
 
-async function healthCheck () {
-  logger.info('healthcheck');
-  return { ok: true };
-}
-
-createTerminus(server, {
-  signals: [
-    'SIGTERM',
-    'SIGINT',
-    'SIGHUP',
-  ],
-  healthChecks: {
-    '/healthcheck': healthCheck,
-    __unsafeExposeStackTraces: !isProductionMode,
-  },
-  onSignal,
-  onShutdown,
-  logger: (msg, err) => {
-    if (msg) {
-      logger.warn(msg);
-    }
-
-    if (err) {
-      logger.error(err);
-    }
-  },
-});
-
-server.listen(port, () => {
-  logger.info(`Example app listening at ${protocol}://${hostname}:${port}`);
-});
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+  logger.error(error);
+  logger.error('Fatal error');
+  process.exit(1);
 });
 
 // to make typescript happy

@@ -9,8 +9,8 @@ services:
       - reddit-service-backend
     ports:
       - "80:3000/tcp"
-    environment:
-      NODE_ENV: 'production'
+    volumes:
+      - .env:/opt/reddit-service-backend/.env
 
 networks:
   bridge:
