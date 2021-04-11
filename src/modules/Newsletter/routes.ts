@@ -8,7 +8,7 @@ import {
   createOne,
   updateOne,
   deleteOne,
-} from './Newsletter.controller';
+} from './controller';
 
 const routes: Routes = [
   {

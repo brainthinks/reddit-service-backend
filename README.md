@@ -31,6 +31,7 @@ A service to manage users who want the top posts of their favorite subreddits se
 ## Future Improvements
 
 * API tests
+* Permissions / roles
 * Authentication (API Gateway, OIDC, keycloak)
 * SSL Termination (ability to serve over https)
 * Improved Auditing.  Right now, only the last modification to a record is saved.

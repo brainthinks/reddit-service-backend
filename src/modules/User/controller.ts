@@ -9,18 +9,26 @@ export async function createOne (req: Request, res: Response, next: NextFunction
 }
 
 export async function updateOne (req: Request, res: Response, next: NextFunction) {
+  const userId = req.params.userId;
+
   next();
 }
 
 export async function deleteOne (req: Request, res: Response, next: NextFunction) {
+  const userId = req.params.userId;
+
   next();
 }
 
 export async function signUp (req: Request, res: Response, next: NextFunction) {
+  const userId = req.params.userId;
+
   next();
 }
 
 export async function getOne (req: Request, res: Response, next: NextFunction) {
+  const userId = req.params.userId;
+
   next();
 }
 

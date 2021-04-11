@@ -8,7 +8,10 @@ import {
   Router,
 } from './types';
 
-export function generateRouterFromRoutes (schema: Schema, routes: Routes): Router {
+export function generateRouterFromRoutes (
+  pathPrefix: string,
+  routes: Routes,
+): Router {
   const _router = express.Router();
 
   for (let i = 0; i < routes.length; i++) {
@@ -18,7 +21,7 @@ export function generateRouterFromRoutes (schema: Schema, routes: Routes): Route
   }
 
   const router: Router = {
-    path: `/${schema.pluralName}`,
+    path: `/${pathPrefix}`,
     router: _router,
   };
 

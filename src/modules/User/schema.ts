@@ -12,6 +12,7 @@ const schema: Schema = {
   pluralName: 'users',
   pluralTitle: 'Users',
   description: 'users of the system',
+  collectionName: 'user',
   fields: {
     firstName: {
       name: 'firstName',

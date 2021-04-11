@@ -9,7 +9,7 @@ import {
   createOne,
   updateOne,
   deleteOne,
-} from './User.controller';
+} from './controller';
 
 const routes: Routes = [
   {

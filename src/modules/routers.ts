@@ -1,12 +1,17 @@
 import {
   Routers,
 } from '../controllers/types';
-import UserRouter from './User/User.router';
-import NewsletterRouter from './Newsletter/Newsletter.router';
+import { Logger } from '../logger';
+import UserRouter from './User/router';
+import NewsletterRouter from './Newsletter/router';
+import AuthenticationRouter from './Authentication/router';
 
-const routers: Routers = [
-  UserRouter,
-  NewsletterRouter,
-];
+export default function getRouters (logger: Logger) {
+  const routers: Routers = [
+    UserRouter,
+    NewsletterRouter,
+    AuthenticationRouter,
+  ];
 
-export default routers;
+  return routers;
+}

@@ -21,7 +21,7 @@ async function main () {
     throw new Error('https not yet supported :(');
   }
 
-  const server = Server.asSingleton(logger, config);
+  const server = Server(logger, config).factory();
 
   await server.start();
 }

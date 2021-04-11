@@ -30,5 +30,6 @@ export interface Schema {
   pluralName: string,
   pluralTitle: string,
   description: string,
+  collectionName: string,
   fields: SchemaFields,
 }
