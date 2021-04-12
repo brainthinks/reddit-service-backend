@@ -17,9 +17,14 @@ services:
     restart: always
     networks:
       - reddit-service-backend
+    volumes:
+      - mongo:/data/db
 
 networks:
   bridge:
     driver: bridge
   reddit-service-backend:
     internal: true
+
+volumes:
+  mongo:

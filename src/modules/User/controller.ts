@@ -27,7 +27,12 @@ export default class UserController {
     this.logger.debug('UserController.createOne');
 
     try {
-      throw new Error('not implemented');
+      const actor = {};
+      const record = req.body;
+
+      const user = await this.userService.createOne(actor, record);
+
+      res.status(200).send(user);
     }
     catch (error) {
       next(error);
@@ -38,7 +43,13 @@ export default class UserController {
     this.logger.debug('UserController.updateOne');
 
     try {
-      throw new Error('not implemented');
+      const actor = {};
+      const userId = req.params.userId;
+      const updates = req.body;
+
+      const user = await this.userService.updateOne(actor, userId, updates);
+
+      res.status(200).send(user);
     }
     catch (error) {
       next(error);

@@ -4,9 +4,9 @@ import {
 } from '../../types';
 
 export const RecordAuditFields: SchemaFields = {
-  userId: {
-    name: 'userId',
-    title: 'User ID',
+  actor: {
+    name: 'actor',
+    title: 'Actor',
     description: 'user who took the action',
     type: 'reference',
     reference: 'User',

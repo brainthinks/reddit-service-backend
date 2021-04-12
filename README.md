@@ -36,5 +36,4 @@ A service to manage users who want the top posts of their favorite subreddits se
 * Support for socket connections for real-time updates
 * Improve schema validation with something like Validator or ForgJs
 * Add types for record instances
-* incoming records should be sanitized to only have valid properties
-*
+* implement filter, sort, paginate, project, etc. (also consider graphql)

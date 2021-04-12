@@ -1,3 +1,4 @@
+import { ObjectID } from 'mongodb';
 import validator from 'validator';
 import moment from 'moment-timezone';
 
@@ -95,6 +96,17 @@ export default async function validate (
         break;
       }
       case 'reference': {
+        console.log('reference', key, value);
+        if (typeof value !== 'object') {
+          throw new Error(`Sanitization failed - Field "${key}" with value "${value}" is not a valid Mongo ID`);
+        }
+
+        try {
+          ObjectID.createFromHexString(value.toString());
+        }
+        catch (error) {
+          throw new Error(`Sanitization failed - Field "${key}" with value "${value}" is not a valid Mongo ID`);
+        }
         break;
       }
       default: {
