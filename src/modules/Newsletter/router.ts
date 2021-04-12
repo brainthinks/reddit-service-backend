@@ -1,7 +1,12 @@
-import { generateRouterFromRoutes } from '../../controllers/utils';
-import schema from './schema';
-import routes from './routes';
+import { Route } from '../../types';
+import Router from '../../lib/controllers/Router';
+import NewsletterService from './service';
 
-const router = generateRouterFromRoutes(schema.pluralName, routes);
+export default function getNewsletterRouter (
+  newsletterService: NewsletterService,
+  routes: Route[],
+): Router {
+  const router = new Router(newsletterService.schema.pluralName, routes);
 
-export default router;
+  return router;
+}

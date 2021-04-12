@@ -5,10 +5,15 @@
   no-process-exit
 */
 
-import createLogger from './logger';
-import Server from './server';
+import 'reflect-metadata';
+
+import createLogger, { Logger } from './logger';
 import getConfig from './config';
-import { Logger } from './logger';
+import getContainer from './inversify.config';
+import { TYPES } from './types';
+import {
+  Server as ServerInterface,
+} from './interfaces';
 
 let logger: Logger;
 
@@ -21,7 +26,9 @@ async function main () {
     throw new Error('https not yet supported :(');
   }
 
-  const server = Server(logger, config).factory();
+  const iocContainer = await getContainer(logger, config);
+
+  const server = iocContainer.get<ServerInterface>(TYPES.Server);
 
   await server.start();
 }

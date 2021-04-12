@@ -9,3 +9,17 @@ services:
     restart: unless-stopped
     volumes:
       - .:/opt/reddit-service-backend
+
+  mongo:
+    restart: unless-stopped
+
+  mongo-express:
+    image: mongo-express
+    restart: unless-stopped
+    networks:
+      - bridge
+      - reddit-service-backend
+    ports:
+      - "8081:8081/tcp"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: ${MONGO_HOSTNAME}

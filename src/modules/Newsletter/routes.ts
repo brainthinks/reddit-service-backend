@@ -1,58 +1,54 @@
 import {
-  Routes,
+  Route,
   RouteMethods,
-} from '../../controllers/types';
-import {
-  getOne,
-  getMany,
-  createOne,
-  updateOne,
-  deleteOne,
-} from './controller';
+} from '../../types';
+import NewsletterController from './controller';
 
-const routes: Routes = [
-  {
-    method: RouteMethods.get,
-    path: '/:newsletterId',
-    middleware: [
-      getOne,
-    ],
-  },
-  {
-    method: RouteMethods.get,
-    path: '/',
-    middleware: [
-      getMany,
-    ],
-  },
-  {
-    method: RouteMethods.post,
-    path: '/',
-    middleware: [
-      createOne,
-    ],
-  },
-  {
-    method: RouteMethods.put,
-    path: '/:newsletterId',
-    middleware: [
-      updateOne,
-    ],
-  },
-  {
-    method: RouteMethods.patch,
-    path: '/:newsletterId',
-    middleware: [
-      updateOne,
-    ],
-  },
-  {
-    method: RouteMethods.delete,
-    path: '/:newsletterId',
-    middleware: [
-      deleteOne,
-    ],
-  },
-];
+export default function getNewsletterRoutes (newsletterController: NewsletterController): Route[] {
+  const routes: Route[] = [
+    {
+      method: RouteMethods.get,
+      path: '/:newsletterId',
+      middleware: [
+        newsletterController.getOne.bind(newsletterController),
+      ],
+    },
+    {
+      method: RouteMethods.get,
+      path: '/',
+      middleware: [
+        newsletterController.getMany.bind(newsletterController),
+      ],
+    },
+    {
+      method: RouteMethods.post,
+      path: '/',
+      middleware: [
+        newsletterController.createOne.bind(newsletterController),
+      ],
+    },
+    {
+      method: RouteMethods.put,
+      path: '/:newsletterId',
+      middleware: [
+        newsletterController.updateOne.bind(newsletterController),
+      ],
+    },
+    {
+      method: RouteMethods.patch,
+      path: '/:newsletterId',
+      middleware: [
+        newsletterController.updateOne.bind(newsletterController),
+      ],
+    },
+    {
+      method: RouteMethods.delete,
+      path: '/:newsletterId',
+      middleware: [
+        newsletterController.deleteOne.bind(newsletterController),
+      ],
+    },
+  ];
 
-export default routes;
+  return routes;
+}

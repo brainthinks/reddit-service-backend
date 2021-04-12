@@ -1,7 +1,7 @@
 import {
   SchemaField,
   SchemaFields,
-} from './types';
+} from '../../types';
 
 export const RecordAuditFields: SchemaFields = {
   userId: {

@@ -1,37 +1,62 @@
+import { injectable, inject } from 'inversify';
+import { Collection } from 'mongodb';
+
+import { TYPES, Schema } from '../../types';
 import { Logger } from '../../logger';
-import { Schema } from '../../schemas/types';
+import Db from '../../services/Db';
 import schema from './schema';
 
-export default function getNewsletterService (logger: Logger, db: any) {
-  return class NewsletterService {
-    schema: Schema;
+@injectable()
+export default class NewsletterService {
+  logger: Logger;
+  db: Db;
+  schema: Schema;
+  collection: Collection;
 
-    static factory (): NewsletterService {
-      return new NewsletterService();
-    }
+  constructor (
+    @inject(TYPES.Logger) logger: Logger,
+    @inject(TYPES.Db) db: Db,
+  ) {
+    this.logger = logger;
+    this.db = db;
 
-    private constructor () {
-      this.schema = schema;
-    }
+    this.schema = schema;
+    this.collection = db.db.collection(this.schema.collectionName);
+  }
 
-    async getOne (user: any, id: string, options: any = {}) {
+  async getOne (user: any, id: string, options: any = {}) {
+    this.logger.info('getOne');
+    // // const query = await authorizeRead(user, id, options);
 
-    }
+    // const query = {
+    //   _id: id,
+    // };
 
-    async getMany (user: any, options: any = {}) {
+    // const results = await this.collection.find(query);
 
-    }
+    // return results;
+  }
 
-    async createOne (user: any, record: string, options: any = {}) {
+  async getMany (user: any, options: any = {}) {
+    this.logger.info('getMany');
+    // const query = await authorizeRead(user, id, options);
 
-    }
+    // const query = {};
 
-    async updateOne (user: any, updates: string, options: any = {}) {
+    // const results = await this.collection.find(query);
 
-    }
+    // return results;
+  }
 
-    async deleteOne (user: any, id: string, options: any = {}) {
+  async createOne (user: any, record: string, options: any = {}) {
+    this.logger.info('createOne');
+  }
 
-    }
-  };
+  async updateOne (user: any, updates: string, options: any = {}) {
+    this.logger.info('updateOne');
+  }
+
+  async deleteOne (user: any, id: string, options: any = {}) {
+    this.logger.info('deleteOne');
+  }
 }

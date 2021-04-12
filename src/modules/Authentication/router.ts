@@ -1,6 +1,12 @@
-import { generateRouterFromRoutes } from '../../controllers/utils';
-import routes from './routes';
+import { Route } from '../../types';
+import Router from '../../lib/controllers/Router';
+import AuthenticationService from './service';
 
-const router = generateRouterFromRoutes('auth', routes);
+export default function getAuthenticationRouter (
+  authenticationService: AuthenticationService,
+  routes: Route[],
+): Router {
+  const router = new Router('auth', routes);
 
-export default router;
+  return router;
+}

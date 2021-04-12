@@ -1,10 +1,10 @@
 import {
   Schema,
-} from '../../schemas/types';
+} from '../../types';
 import {
   CreatedAtField,
   UpdatedAtField,
-} from '../../schemas/utils';
+} from '../../lib/schemas/fields';
 
 const schema: Schema = {
   name: 'user',

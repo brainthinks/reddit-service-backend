@@ -1,66 +1,62 @@
 import {
-  Routes,
+  Route,
   RouteMethods,
-} from '../../controllers/types';
-import {
-  getOne,
-  getMany,
-  signUp,
-  createOne,
-  updateOne,
-  deleteOne,
-} from './controller';
+} from '../../types';
 
-const routes: Routes = [
-  {
-    method: RouteMethods.get,
-    path: '/:userId',
-    middleware: [
-      getOne,
-    ],
-  },
-  {
-    method: RouteMethods.get,
-    path: '/',
-    middleware: [
-      getMany,
-    ],
-  },
-  {
-    method: RouteMethods.post,
-    path: '/signUp',
-    middleware: [
-      signUp,
-    ],
-  },
-  {
-    method: RouteMethods.post,
-    path: '/',
-    middleware: [
-      createOne,
-    ],
-  },
-  {
-    method: RouteMethods.put,
-    path: '/:userId',
-    middleware: [
-      updateOne,
-    ],
-  },
-  {
-    method: RouteMethods.patch,
-    path: '/:userId',
-    middleware: [
-      updateOne,
-    ],
-  },
-  {
-    method: RouteMethods.delete,
-    path: '/:userId',
-    middleware: [
-      deleteOne,
-    ],
-  },
-];
+import UserController from './controller';
 
-export default routes;
+export default function getUserRoutes (userController: UserController): Route[] {
+  const routes: Route[] = [
+    {
+      method: RouteMethods.get,
+      path: '/:userId',
+      middleware: [
+        userController.getOne.bind(userController),
+      ],
+    },
+    {
+      method: RouteMethods.get,
+      path: '/',
+      middleware: [
+        userController.getMany.bind(userController),
+      ],
+    },
+    {
+      method: RouteMethods.post,
+      path: '/signUp',
+      middleware: [
+        userController.signUp.bind(userController),
+      ],
+    },
+    {
+      method: RouteMethods.post,
+      path: '/',
+      middleware: [
+        userController.createOne.bind(userController),
+      ],
+    },
+    {
+      method: RouteMethods.put,
+      path: '/:userId',
+      middleware: [
+        userController.updateOne.bind(userController),
+      ],
+    },
+    {
+      method: RouteMethods.patch,
+      path: '/:userId',
+      middleware: [
+        userController.updateOne.bind(userController),
+      ],
+    },
+    {
+      method: RouteMethods.delete,
+      path: '/:userId',
+      middleware: [
+        userController.deleteOne.bind(userController),
+      ],
+    },
+  ];
+
+  return routes;
+}

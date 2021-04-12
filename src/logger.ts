@@ -26,7 +26,14 @@ const debugFormat = winston.format.combine(
     return info;
   })(),
   winston.format.align(),
-  winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
+  winston.format.printf((info) => {
+    let message = `${info.timestamp} ${info.level}: ${info.message}`;
+    if (info.stack) {
+      message = `${message} \n STACK: \n ${info.stack}`;
+    }
+
+    return message;
+  }),
 );
 
 export type { Logger };

@@ -12,6 +12,12 @@ services:
     volumes:
       - .env:/opt/reddit-service-backend/.env
 
+  mongo:
+    image: mongo
+    restart: always
+    networks:
+      - reddit-service-backend
+
 networks:
   bridge:
     driver: bridge

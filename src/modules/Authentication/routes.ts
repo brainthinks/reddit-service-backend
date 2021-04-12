@@ -1,27 +1,26 @@
 import {
-  Routes,
+  Route,
   RouteMethods,
-} from '../../controllers/types';
-import {
-  login,
-  logout,
-} from './controller';
+} from '../../types';
+import AuthenticationController from './controller';
 
-const routes: Routes = [
-  {
-    method: RouteMethods.post,
-    path: '/login',
-    middleware: [
-      login,
-    ],
-  },
-  {
-    method: RouteMethods.post,
-    path: '/logout',
-    middleware: [
-      logout,
-    ],
-  },
-];
+export default function getAuthenticationRoutes (authenticationController: AuthenticationController): Route[] {
+  const routes: Route[] = [
+    {
+      method: RouteMethods.post,
+      path: '/login',
+      middleware: [
+        authenticationController.login.bind(authenticationController),
+      ],
+    },
+    {
+      method: RouteMethods.post,
+      path: '/logout',
+      middleware: [
+        authenticationController.logout.bind(authenticationController),
+      ],
+    },
+  ];
 
-export default routes;
+  return routes;
+}
