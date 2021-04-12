@@ -18,13 +18,17 @@ export default function (logger: Logger) {
       error,
     ]);
 
-    if (req.xhr) {
-      res.status(500).send({
-        error: 'Fatal server error.',
-      });
-    }
-    else {
-      next(error);
-    }
+    res.status(500).send({
+      error: error.stack,
+    });
+
+    // if (req.xhr) {
+    //   res.status(500).send({
+    //     error: 'Fatal server error.',
+    //   });
+    // }
+    // else {
+    //   next(error);
+    // }
   };
 }

@@ -34,6 +34,7 @@ export const CreatedAtField: SchemaField = {
   description: 'when the record was created and by whom',
   type: 'fields',
   fields: RecordAuditFields,
+  required: true,
 };
 
 export const UpdatedAtField: SchemaField = {
@@ -42,4 +43,5 @@ export const UpdatedAtField: SchemaField = {
   description: 'when the record was last updated and by whom',
   type: 'fields',
   fields: RecordAuditFields,
+  required: true,
 };

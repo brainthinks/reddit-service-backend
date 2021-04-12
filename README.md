@@ -2,13 +2,11 @@
 
 A service to manage users who want the top posts of their favorite subreddits sent to their inbox.
 
-
 ## Table of Contents <!-- omit in toc -->
 
 - [Getting Started](#getting-started)
 - [Development](#development)
 - [Future Improvements](#future-improvements)
-
 
 ## Getting Started
 
@@ -17,7 +15,6 @@ A service to manage users who want the top posts of their favorite subreddits se
 1. Configure `.env`
 1. `docker-compose down && docker-compose up`
 1. navigate to [https://localhost](http://localhost)
-
 
 ## Development
 
@@ -30,9 +27,14 @@ A service to manage users who want the top posts of their favorite subreddits se
 
 ## Future Improvements
 
+* Errors are not currently handled in a way that is safe or useful to the caller
 * API tests
 * Permissions / roles
 * Authentication (API Gateway, OIDC, keycloak)
 * SSL Termination (ability to serve over https)
 * Improved Auditing.  Right now, only the last modification to a record is saved.
 * Support for socket connections for real-time updates
+* Improve schema validation with something like Validator or ForgJs
+* Add types for record instances
+* incoming records should be sanitized to only have valid properties
+*

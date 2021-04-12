@@ -4,6 +4,7 @@ import {
   Response,
   NextFunction,
 } from 'express';
+import moment from 'moment-timezone';
 
 import { TYPES } from '../../types';
 import { Logger } from '../../interfaces';
@@ -22,41 +23,98 @@ export default class UserController {
     this.userService = userService;
   }
 
-  async createOne (req: Request, res: Response, next: NextFunction) {
-    next();
+  async createOne (req: Request, res: Response, next: NextFunction): Promise<void> {
+    this.logger.debug('UserController.createOne');
+
+    try {
+      throw new Error('not implemented');
+    }
+    catch (error) {
+      next(error);
+    }
   }
 
-  async updateOne (req: Request, res: Response, next: NextFunction) {
-    const userId = req.params.userId;
+  async updateOne (req: Request, res: Response, next: NextFunction): Promise<void> {
+    this.logger.debug('UserController.updateOne');
 
-    next();
+    try {
+      throw new Error('not implemented');
+    }
+    catch (error) {
+      next(error);
+    }
   }
 
-  async deleteOne (req: Request, res: Response, next: NextFunction) {
-    const userId = req.params.userId;
+  async deleteOne (req: Request, res: Response, next: NextFunction): Promise<void> {
+    this.logger.debug('UserController.deleteOne');
 
-    next();
+    try {
+      const actor = {};
+      const userId = req.params.userId;
+
+      const result = await this.userService.deleteOne(actor, userId);
+
+      res.status(200).send({ success: result });
+    }
+    catch (error) {
+      next(error);
+    }
   }
 
-  async getOne (req: Request, res: Response, next: NextFunction) {
-    const userId = req.params.userId;
+  async getOne (req: Request, res: Response, next: NextFunction): Promise<void> {
+    this.logger.debug('UserController.getOne');
 
-    this.logger.info(userId);
+    try {
+      const actor = {};
+      const userId = req.params.userId;
 
-    next();
+      const user = await this.userService.getOne(actor, userId);
+
+      res.status(200).send(user);
+    }
+    catch (error) {
+      next(error);
+    }
   }
 
-  async getMany (req: Request, res: Response, next: NextFunction) {
-    next();
+  async getMany (req: Request, res: Response, next: NextFunction): Promise<void> {
+    this.logger.debug('UserController.getMany');
+
+    try {
+      const actor = {};
+
+      const users = await this.userService.getMany(actor);
+
+      res.status(200).send(users);
+    }
+    catch (error) {
+      next(error);
+    }
   }
 
-  async signUp (req: Request, res: Response, next: NextFunction) {
-    const user = req.body;
+  async signUp (req: Request, res: Response, next: NextFunction): Promise<void> {
+    this.logger.debug('UserController.SignUp');
 
-    const results = await this.userService.signUp(user);
+    try {
+      const user = req.body;
 
-    console.log(results);
+      const signedUpUser = await this.userService.signUp(user);
 
-    next();
+      res.status(200).send(signedUpUser);
+    }
+    catch (error) {
+      next(error);
+    }
+  }
+
+  async supportedTimeZones (req: Request, res: Response, next: NextFunction): Promise<void> {
+    this.logger.debug('UserController.supportedTimeZones');
+
+    try {
+      res.status(200).send(moment.tz.names());
+    }
+    catch (error) {
+      next(error);
+    }
   }
 }

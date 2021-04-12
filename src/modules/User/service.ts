@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { Collection } from 'mongodb';
+import { ObjectID, Collection } from 'mongodb';
 
 import {
   TYPES, Schema, Service,
@@ -7,6 +7,7 @@ import {
 import { Logger } from '../../logger';
 import Db from '../../services/Db';
 import schema from './schema';
+import validate from '../../lib/schemas/validator';
 
 @injectable()
 export default class UserService implements Service {
@@ -26,44 +27,91 @@ export default class UserService implements Service {
     this.collection = db.db.collection(this.schema.collectionName);
   }
 
-  async getOne (user: any, id: string, options: any = {}) {
-    this.logger.info('getOne');
-    // // const query = await authorizeRead(user, id, options);
+  async getOne (actor: any, id: string, options: any = {}): Promise<any> {
+    this.logger.debug('UserService.getOne');
 
-    // const query = {
-    //   _id: id,
-    // };
+    const query = {
+      _id: ObjectID.createFromHexString(id.toString()),
+    };
 
-    // const results = await this.collection.find(query);
+    const userRecord = await this.collection.findOne(query);
 
-    // return results;
+    return userRecord;
   }
 
-  async getMany (user: any, options: any = {}) {
-    this.logger.info('getMany');
-    // const query = await authorizeRead(user, id, options);
+  async getMany (actor: any, options: any = {}): Promise<any[]> {
+    this.logger.debug('UserService.getMany');
 
-    // const query = {};
+    const query = {};
 
-    // const results = await this.collection.find(query);
+    const userRecords = await this.collection.find(query).toArray();
 
-    // return results;
+    return userRecords;
   }
 
-  async createOne (user: any, record: string, options: any = {}) {
-    this.logger.info('createOne');
+  async createOne (actor: any, record: string, options: any = {}): Promise<any> {
+    this.logger.debug('UserService.createOne');
+    throw new Error('not implemented');
   }
 
-  async updateOne (user: any, updates: string, options: any = {}) {
-    this.logger.info('updateOne');
+  async updateOne (actor: any, updates: string, options: any = {}): Promise<any> {
+    this.logger.debug('UserService.updateOne');
+    throw new Error('not implemented');
   }
 
-  async deleteOne (user: any, id: string, options: any = {}) {
-    this.logger.info('deleteOne');
+  async deleteOne (actor: any, id: string, options: any = {}): Promise<boolean> {
+    this.logger.debug('UserService.deleteOne');
+
+    const query = {
+      _id: ObjectID.createFromHexString(id.toString()),
+    };
+
+    const count = await this.collection.count(query);
+
+    if (count === 0) {
+      throw new Error(`Cannot delete non-existent user with id "${id}"`);
+    }
+
+    const result = await this.collection.deleteOne(query);
+
+    console.log(result);
+
+    return true;
   }
 
-  async signUp (record: string, options: any = {}) {
-    console.log(record);
-    this.logger.info('signUp');
+  async signUp (record: any, options: any = {}): Promise<any> {
+    this.logger.debug('UserService.signUp');
+
+    const user = {
+      ...record,
+    };
+
+    await validate(this, user, {
+      skipFields: [
+        this.schema.fields.createdAt.name,
+        this.schema.fields.updatedAt.name,
+      ],
+    });
+
+    const { insertedId } = await this.collection.insertOne(user);
+    const at = Date.now();
+
+    user._id = insertedId;
+    user.createdAt = {
+      userId: user._id,
+      at,
+      message: `User ${user.username} signed up at ${at}`,
+    };
+    user.updatedAt = user.createdAt;
+
+    await validate(this, user);
+
+    const { modifiedCount } = await this.collection.updateOne({ _id: user._id }, { $set: user });
+
+    if (modifiedCount !== 1) {
+      throw new Error('Error while signing up');
+    }
+
+    return this.getOne(user, user._id);
   }
 }

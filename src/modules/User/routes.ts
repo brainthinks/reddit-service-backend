@@ -56,6 +56,13 @@ export default function getUserRoutes (userController: UserController): Route[] 
         userController.deleteOne.bind(userController),
       ],
     },
+    {
+      method: RouteMethods.get,
+      path: '/utils/supportedTimeZones',
+      middleware: [
+        userController.supportedTimeZones.bind(userController),
+      ],
+    },
   ];
 
   return routes;
