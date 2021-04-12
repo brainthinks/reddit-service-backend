@@ -2,9 +2,13 @@ import {
   Route,
   RouteMethods,
 } from '../../types';
+import AuthenticationController from '../Authentication/controller';
 import NewsletterController from './controller';
 
-export default function getNewsletterRoutes (newsletterController: NewsletterController): Route[] {
+export default function getNewsletterRoutes (
+  authenticationController: AuthenticationController,
+  newsletterController: NewsletterController,
+): Route[] {
   const routes: Route[] = [
     {
       method: RouteMethods.get,

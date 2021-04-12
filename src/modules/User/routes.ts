@@ -2,10 +2,13 @@ import {
   Route,
   RouteMethods,
 } from '../../types';
-
+import AuthenticationController from '../Authentication/controller';
 import UserController from './controller';
 
-export default function getUserRoutes (userController: UserController): Route[] {
+export default function getUserRoutes (
+  authenticationController: AuthenticationController,
+  userController: UserController,
+): Route[] {
   const routes: Route[] = [
     {
       method: RouteMethods.get,
@@ -25,6 +28,7 @@ export default function getUserRoutes (userController: UserController): Route[] 
       method: RouteMethods.post,
       path: '/signUp',
       middleware: [
+        authenticationController.ensureUnauthenticated.bind(authenticationController),
         userController.signUp.bind(userController),
       ],
     },
@@ -32,6 +36,7 @@ export default function getUserRoutes (userController: UserController): Route[] 
       method: RouteMethods.post,
       path: '/',
       middleware: [
+        authenticationController.ensureAuthenticated.bind(authenticationController),
         userController.createOne.bind(userController),
       ],
     },
@@ -39,6 +44,7 @@ export default function getUserRoutes (userController: UserController): Route[] 
       method: RouteMethods.put,
       path: '/:userId',
       middleware: [
+        authenticationController.ensureAuthenticated.bind(authenticationController),
         userController.updateOne.bind(userController),
       ],
     },
@@ -46,6 +52,7 @@ export default function getUserRoutes (userController: UserController): Route[] 
       method: RouteMethods.patch,
       path: '/:userId',
       middleware: [
+        authenticationController.ensureAuthenticated.bind(authenticationController),
         userController.updateOne.bind(userController),
       ],
     },
@@ -53,6 +60,7 @@ export default function getUserRoutes (userController: UserController): Route[] 
       method: RouteMethods.delete,
       path: '/:userId',
       middleware: [
+        authenticationController.ensureAuthenticated.bind(authenticationController),
         userController.deleteOne.bind(userController),
       ],
     },

@@ -69,13 +69,21 @@ export default async function getContainer (logger: Logger, config: Config): Pro
   // Routes
   container
     .bind<Route[]>(TYPES.UserRoutes)
-    .toConstantValue(getUserRoutes(container.resolve(UserController)));
+    .toConstantValue(getUserRoutes(
+      container.resolve(AuthenticationController),
+      container.resolve(UserController),
+    ));
   container
     .bind<Route[]>(TYPES.NewsletterRoutes)
-    .toConstantValue(getNewsletterRoutes(container.resolve(NewsletterController)));
+    .toConstantValue(getNewsletterRoutes(
+      container.resolve(AuthenticationController),
+      container.resolve(NewsletterController),
+    ));
   container
     .bind<Route[]>(TYPES.AuthenticationRoutes)
-    .toConstantValue(getAuthenticationRoutes(container.resolve(AuthenticationController)));
+    .toConstantValue(getAuthenticationRoutes(
+      container.resolve(AuthenticationController),
+    ));
 
   // Routers
   container

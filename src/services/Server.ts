@@ -19,6 +19,7 @@ import {
   requestLogger,
   errorHandler,
 } from '../middleware';
+import AuthenticationController from '../modules/Authentication/controller';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const packageJson = require('../../package.json');
@@ -29,6 +30,7 @@ export default class Server implements ServerInterface {
   logger: Logger;
   config: Config;
   db: Db;
+  authenticationController: AuthenticationController;
   routerCollection: RouterCollection;
   server: http.Server;
   app: Express;
@@ -37,11 +39,13 @@ export default class Server implements ServerInterface {
     @inject(TYPES.Logger) logger: Logger,
     @inject(TYPES.Config) config: Config,
     @inject(TYPES.Db) db: Db,
+    @inject(TYPES.AuthenticationController) authenticationController: AuthenticationController,
     @inject(TYPES.RouterCollection) routerCollection: RouterCollection,
   ) {
     this.logger = logger;
     this.config = config;
     this.db = db;
+    this.authenticationController = authenticationController;
     this.routerCollection = routerCollection;
 
     this.app = express();
@@ -74,6 +78,8 @@ export default class Server implements ServerInterface {
 
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(express.json());
+
+    this.authenticationController.initializeApp(this.app);
 
     this.routerCollection.forEach((router) => {
       this.app.use(router.path, router.router);

@@ -26,21 +26,13 @@ export default class AuthenticationService {
     this.userService = userService;
   }
 
-  async login (user: any, options: any = {}) {
-    try {
-      const validUser = await this.userService.getOne(user, user._id);
+  async authenticate (username: string, password: string, options: any = {}) {
+    const user = await this.userService.collection.findOne({ username });
 
-      // @todo - do some passport stuff
+    if (!user) {
+      throw new Error('Invalid credentials');
     }
-    catch (error) {
-      this.logger.error([
-        `Unable to login as user with id: ${user._id}`,
-        error,
-      ]);
-    }
-  }
 
-  async logout (user: any, options: any = {}) {
-
+    return user;
   }
 }

@@ -20,6 +20,12 @@ services:
     volumes:
       - mongo:/data/db
 
+  redis:
+    image: redis
+    restart: always
+    networks:
+      - reddit-service-backend
+
 networks:
   bridge:
     driver: bridge
