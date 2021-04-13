@@ -14,6 +14,7 @@ export default function getNewsletterRoutes (
       method: RouteMethods.get,
       path: '/:newsletterId',
       middleware: [
+        authenticationController.ensureAuthenticated.bind(authenticationController),
         newsletterController.getOne.bind(newsletterController),
       ],
     },
@@ -21,6 +22,7 @@ export default function getNewsletterRoutes (
       method: RouteMethods.get,
       path: '/',
       middleware: [
+        authenticationController.ensureAuthenticated.bind(authenticationController),
         newsletterController.getMany.bind(newsletterController),
       ],
     },
@@ -28,6 +30,7 @@ export default function getNewsletterRoutes (
       method: RouteMethods.post,
       path: '/',
       middleware: [
+        authenticationController.ensureAuthenticated.bind(authenticationController),
         newsletterController.createOne.bind(newsletterController),
       ],
     },
@@ -35,6 +38,7 @@ export default function getNewsletterRoutes (
       method: RouteMethods.put,
       path: '/:newsletterId',
       middleware: [
+        authenticationController.ensureAuthenticated.bind(authenticationController),
         newsletterController.updateOne.bind(newsletterController),
       ],
     },
@@ -42,6 +46,7 @@ export default function getNewsletterRoutes (
       method: RouteMethods.patch,
       path: '/:newsletterId',
       middleware: [
+        authenticationController.ensureAuthenticated.bind(authenticationController),
         newsletterController.updateOne.bind(newsletterController),
       ],
     },
@@ -49,6 +54,7 @@ export default function getNewsletterRoutes (
       method: RouteMethods.delete,
       path: '/:newsletterId',
       middleware: [
+        authenticationController.ensureAuthenticated.bind(authenticationController),
         newsletterController.deleteOne.bind(newsletterController),
       ],
     },

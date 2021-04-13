@@ -12,8 +12,16 @@ export default function getUserRoutes (
   const routes: Route[] = [
     {
       method: RouteMethods.get,
+      path: '/utils/supportedTimeZones',
+      middleware: [
+        userController.supportedTimeZones.bind(userController),
+      ],
+    },
+    {
+      method: RouteMethods.get,
       path: '/:userId',
       middleware: [
+        authenticationController.ensureAuthenticated.bind(authenticationController),
         userController.getOne.bind(userController),
       ],
     },
@@ -21,6 +29,7 @@ export default function getUserRoutes (
       method: RouteMethods.get,
       path: '/',
       middleware: [
+        authenticationController.ensureAuthenticated.bind(authenticationController),
         userController.getMany.bind(userController),
       ],
     },
@@ -62,13 +71,6 @@ export default function getUserRoutes (
       middleware: [
         authenticationController.ensureAuthenticated.bind(authenticationController),
         userController.deleteOne.bind(userController),
-      ],
-    },
-    {
-      method: RouteMethods.get,
-      path: '/utils/supportedTimeZones',
-      middleware: [
-        userController.supportedTimeZones.bind(userController),
       ],
     },
   ];

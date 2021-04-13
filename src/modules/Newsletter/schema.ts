@@ -12,7 +12,7 @@ const NewsletterSchema: Schema = {
   pluralName: 'newsletters',
   pluralTitle: 'Newsletters',
   description: 'newsletters that may be sent out at configured times',
-  collectionName: 'user',
+  collectionName: 'newsletter',
   fields: {
     title: {
       name: 'title',

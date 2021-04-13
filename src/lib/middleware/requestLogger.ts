@@ -4,7 +4,7 @@ import {
   NextFunction,
 } from 'express';
 
-import { Logger } from '../logger';
+import { Logger } from '../../interfaces';
 
 export default function (logger: Logger) {
   return function requestLogger (

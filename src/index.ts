@@ -14,6 +14,7 @@ import { TYPES } from './types';
 import {
   Server as ServerInterface,
 } from './interfaces';
+import NewsletterService from './modules/Newsletter/service';
 
 let logger: Logger;
 
@@ -26,10 +27,12 @@ async function main () {
     throw new Error('https not yet supported :(');
   }
 
-  const iocContainer = await getContainer(logger, config);
+  const container = await getContainer(logger, config);
 
-  const server = iocContainer.get<ServerInterface>(TYPES.Server);
+  const newsletterSerivice = container.get<NewsletterService>(TYPES.NewsletterService);
+  const server = container.get<ServerInterface>(TYPES.Server);
 
+  await newsletterSerivice.initialize();
   await server.start();
 }
 

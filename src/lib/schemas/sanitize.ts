@@ -52,10 +52,12 @@ export default async function sanitize (
         break;
       }
       case 'collection': {
-        throw new Error('Not implemented');
-        // if (!Array.isArray(value)) {
-        //   throw new Error(`Sanitization failed - Field "${key}" with value "${value}" is not a collection`);
-        // }
+        if (!Array.isArray(value)) {
+          throw new Error(`Sanitization failed - Field "${key}" with value "${value}" is not a collection`);
+        }
+
+        // @todo - sanitize items
+
         break;
       }
       case 'fields': {
@@ -74,7 +76,6 @@ export default async function sanitize (
         break;
       }
       case 'reference': {
-        console.log('reference', key, value);
         if (typeof value !== 'string' && typeof value !== 'object') {
           throw new Error(`Sanitization failed - Field "${key}" with value "${value}" is not a valid Mongo ID`);
         }

@@ -1,4 +1,7 @@
-import { inject, injectable } from 'inversify';
+import {
+  inject,
+  injectable,
+} from 'inversify';
 import {
   Request,
   Response,
@@ -27,7 +30,7 @@ export default class UserController {
     this.logger.debug('UserController.createOne');
 
     try {
-      const actor = {};
+      const actor = req.user;
       const record = req.body;
 
       const user = await this.userService.createOne(actor, record);
@@ -43,11 +46,12 @@ export default class UserController {
     this.logger.debug('UserController.updateOne');
 
     try {
-      const actor = {};
+      const actor = req.user;
       const userId = req.params.userId;
       const updates = req.body;
+      const partial = req.method === 'PATCH';
 
-      const user = await this.userService.updateOne(actor, userId, updates);
+      const user = await this.userService.updateOne(actor, userId, updates, { partial });
 
       res.status(200).send(user);
     }
@@ -60,7 +64,7 @@ export default class UserController {
     this.logger.debug('UserController.deleteOne');
 
     try {
-      const actor = {};
+      const actor = req.user;
       const userId = req.params.userId;
 
       const result = await this.userService.deleteOne(actor, userId);
@@ -76,7 +80,7 @@ export default class UserController {
     this.logger.debug('UserController.getOne');
 
     try {
-      const actor = {};
+      const actor = req.user;
       const userId = req.params.userId;
 
       const user = await this.userService.getOne(actor, userId);
@@ -92,7 +96,7 @@ export default class UserController {
     this.logger.debug('UserController.getMany');
 
     try {
-      const actor = {};
+      const actor = req.user;
 
       const users = await this.userService.getMany(actor);
 

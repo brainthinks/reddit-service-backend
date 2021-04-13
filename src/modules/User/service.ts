@@ -1,17 +1,15 @@
 import { injectable, inject } from 'inversify';
 import { ObjectID, Collection } from 'mongodb';
 
-import {
-  TYPES, Schema, Service,
-} from '../../types';
-import { Logger } from '../../logger';
+import { TYPES, Schema } from '../../types';
+import { Logger } from '../../interfaces';
 import Db from '../../services/Db';
 import schema from './schema';
 import validate from '../../lib/schemas/validator';
 import sanitize from '../../lib/schemas/sanitize';
 
 @injectable()
-export default class UserService implements Service {
+export default class UserService {
   logger: Logger;
   db: Db;
   schema: Schema;
@@ -87,7 +85,7 @@ export default class UserService implements Service {
     const user = await this.getOne(actor, id);
 
     const sanitizedUpdates = await sanitize(this, updates, {
-      skipMissingFields: true,
+      skipMissingFields: options.partial,
       skipFields: [
         this.schema.fields.createdAt.name,
         this.schema.fields.updatedAt.name,
@@ -102,8 +100,8 @@ export default class UserService implements Service {
       message: `User ${user.username} updated by ${actor.username} at ${at}`,
     };
 
-    await validate(this, user, {
-      skipMissingFields: true,
+    await validate(this, sanitizedUpdates, {
+      skipMissingFields: options.partial,
     });
 
     const query = {
@@ -176,5 +174,17 @@ export default class UserService implements Service {
     }
 
     return this.getOne(user, user._id);
+  }
+
+  async lookupById (id: string): Promise<any> {
+    this.logger.debug('UserService.lookupById');
+
+    const query = {
+      _id: ObjectID.createFromHexString(id.toString()),
+    };
+
+    const user = await this.collection.findOne(query);
+
+    return user;
   }
 }

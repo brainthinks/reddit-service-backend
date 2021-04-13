@@ -18,7 +18,7 @@ import RouterCollection from './RouterCollection';
 import {
   requestLogger,
   errorHandler,
-} from '../middleware';
+} from '../lib/middleware';
 import AuthenticationController from '../modules/Authentication/controller';
 
 /* eslint-disable @typescript-eslint/no-var-requires */

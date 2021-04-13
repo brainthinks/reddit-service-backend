@@ -1,14 +1,12 @@
 import { Container } from 'inversify';
 
-import { Logger } from './logger';
-import { Config } from './config';
 import {
   TYPES,
   Route,
 } from './types';
 import {
-  Logger as LoggerInterface,
-  Config as ConfigInterface,
+  Logger,
+  Config,
   Db as DbInterface,
   Server as ServerInterface,
 } from './interfaces';
@@ -44,8 +42,8 @@ export default async function getContainer (logger: Logger, config: Config): Pro
   const container = new Container({ defaultScope: 'Singleton' });
 
   // Bootstrapping
-  container.bind<LoggerInterface>(TYPES.Logger).toConstantValue(logger);
-  container.bind<ConfigInterface>(TYPES.Config).toConstantValue(config);
+  container.bind<Logger>(TYPES.Logger).toConstantValue(logger);
+  container.bind<Config>(TYPES.Config).toConstantValue(config);
 
   // Db
   container.bind<DbInterface>(TYPES.Db).to(Db);

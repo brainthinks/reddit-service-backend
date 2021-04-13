@@ -26,6 +26,16 @@ services:
     networks:
       - reddit-service-backend
 
+  reddit-email-service-stub:
+    image: node:lts-alpine
+    restart: always
+    networks:
+      - reddit-service-backend
+    volumes:
+      - ./reddit-email-service-stub:/opt/reddit-email-service-stub
+    command:
+      ['node', '/opt/reddit-email-service-stub/index.js']
+
 networks:
   bridge:
     driver: bridge

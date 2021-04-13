@@ -35,4 +35,14 @@ export default class AuthenticationService {
 
     return user;
   }
+
+  serializeUser (user: any): string {
+    return user._id.toString();
+  }
+
+  async deserializeUser (serializedUser: string): Promise<any> {
+    const user = await this.userService.lookupById(serializedUser);
+
+    return user;
+  }
 }

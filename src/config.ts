@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { Logger } from './logger';
+import { Logger } from './interfaces';
 
 enum Protocol {
   https = 'https',
@@ -17,12 +17,13 @@ interface Argv {
   ENABLE_SSL: boolean,
   HOSTNAME: string,
   PORT: number,
-  MONGO_PROTOCOL: string,
-  MONGO_HOSTNAME: string,
-  MONGO_PORT: number,
+  REDDIT_EMAIL_SERVICE_URL: string,
+  MONGO_URL: string,
   MONGO_USERNAME: string,
   MONGO_PASSWORD: string,
   MONGO_CONNECTION_TIMEOUT_SECONDS: number,
+  REDIS_HOSTNAME: string,
+  REDIS_PORT: number,
 }
 
 export interface Config {
@@ -30,12 +31,13 @@ export interface Config {
   protocol: Protocol,
   hostname: string,
   port: number,
-  mongoProtocol: string,
-  mongoHostname: string,
-  mongoPort: number,
+  redditEmailServiceUrl: string,
+  mongoUrl: string,
   mongoUsername: string,
   mongoPassword: string,
   mongoConnectionTimeoutSeconds: number,
+  redisHostname: string,
+  redisPort: number,
 }
 
 function getStringValue (value: any): string {
@@ -110,13 +112,9 @@ export default function getConfig (logger: Logger): Config {
       demandOption: true,
     })
     .option('ENABLE_SSL', {
-      type: 'boolean',
+      type: 'number',
       description: 'serve the application over https',
-      choices: [
-        true,
-        false,
-      ],
-      coerce: (arg: any) => arg === '1',
+      coerce: (arg: any) => arg !== 0,
       nargs: 1,
       demandOption: true,
     })
@@ -132,21 +130,15 @@ export default function getConfig (logger: Logger): Config {
       nargs: 1,
       demandOption: true,
     })
-    .option('MONGO_PROTOCOL', {
+    .option('REDDIT_EMAIL_SERVICE_URL', {
       type: 'string',
-      description: 'protocol for mongo db connection',
+      description: 'url to the service that will send out the email',
       nargs: 1,
       demandOption: true,
     })
-    .option('MONGO_HOSTNAME', {
+    .option('MONGO_URL', {
       type: 'string',
-      description: 'hostname for mongo db connection',
-      nargs: 1,
-      demandOption: true,
-    })
-    .option('MONGO_PORT', {
-      type: 'number',
-      description: 'port for mongo db connection',
+      description: 'mongo connection string, consisting of protocol, hostname, and port only',
       nargs: 1,
       demandOption: true,
     })
@@ -168,6 +160,18 @@ export default function getConfig (logger: Logger): Config {
       nargs: 1,
       demandOption: true,
     })
+    .option('REDIS_HOSTNAME', {
+      type: 'string',
+      description: 'redis service hostname',
+      nargs: 1,
+      demandOption: true,
+    })
+    .option('REDIS_PORT', {
+      type: 'number',
+      description: 'redis service port',
+      nargs: 1,
+      demandOption: true,
+    })
     .epilogue('by Brian Andress')
     .parse(envAsArgs) as Argv;
 
@@ -178,13 +182,13 @@ export default function getConfig (logger: Logger): Config {
       : Protocol.http,
     hostname: argv.HOSTNAME,
     port: argv.PORT,
-    mongoProtocol: argv.MONGO_PROTOCOL,
-    mongoHostname: argv.MONGO_HOSTNAME,
-    mongoPort: argv.MONGO_PORT,
+    redditEmailServiceUrl: argv.REDDIT_EMAIL_SERVICE_URL,
+    mongoUrl: argv.MONGO_URL,
     mongoUsername: argv.MONGO_USERNAME,
     mongoPassword: argv.MONGO_PASSWORD,
     mongoConnectionTimeoutSeconds: argv.MONGO_CONNECTION_TIMEOUT_SECONDS,
-
+    redisHostname: argv.REDIS_HOSTNAME,
+    redisPort: argv.REDIS_PORT,
   };
 
   logger.debug([

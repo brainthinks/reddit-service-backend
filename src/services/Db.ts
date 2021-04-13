@@ -49,10 +49,8 @@ export default class Db implements DbInterface {
   }
 
   getConnectionStringWhatwgUrl (): URL {
-    const url = new URL(`${this.config.mongoProtocol}://`);
+    const url = new URL(this.config.mongoUrl);
 
-    url.hostname = this.config.mongoHostname;
-    url.port = this.config.mongoPort.toString();
     url.username = this.config.mongoUsername;
     url.password = this.config.mongoPassword;
     url.searchParams.append('connectTimeoutMS', `${this.config.mongoConnectionTimeoutSeconds * 1000}`);

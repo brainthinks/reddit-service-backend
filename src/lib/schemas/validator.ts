@@ -2,7 +2,7 @@ import { ObjectID } from 'mongodb';
 import validator from 'validator';
 import moment from 'moment-timezone';
 
-const timeOfDayRegExp = new RegExp(/^\d{2}:\d{2}:\d{2}$/);
+const timeOfDayRegExp = new RegExp(/^\d{2}:\d{2}$/);
 const supportedTimezones = moment.tz.names();
 
 export default async function validate (
@@ -22,6 +22,10 @@ export default async function validate (
     const field = service.schema.fields[key];
 
     if (options.skipFields && options.skipFields.includes(key)) {
+      continue;
+    }
+
+    if (value === undefined && options.skipMissingFields) {
       continue;
     }
 
@@ -65,6 +69,19 @@ export default async function validate (
           throw new Error(`Field "${key}" with value "${value}" is not a valid time of day`);
         }
 
+        const [
+          hour,
+          minute,
+        ] = value.split(':');
+
+        if (Number(hour) > 23 || Number(hour) < 0) {
+          throw new Error(`Field "${key}" with value "${value}" has an invalid hour value`);
+        }
+
+        if (Number(minute) > 59 || Number(minute) < 0) {
+          throw new Error(`Field "${key}" with value "${value}" has an invalid minute value`);
+        }
+
         break;
       }
       case 'timestamp': {
@@ -74,10 +91,12 @@ export default async function validate (
         break;
       }
       case 'collection': {
-        throw new Error('Not implemented');
-        // if (!Array.isArray(value)) {
-        //   throw new Error(`Field "${key}" with value "${value}" is not a collection`);
-        // }
+        if (!Array.isArray(value)) {
+          throw new Error(`Field "${key}" with value "${value}" is not a collection`);
+        }
+
+        // @todo - validate items
+
         break;
       }
       case 'fields': {
@@ -96,7 +115,6 @@ export default async function validate (
         break;
       }
       case 'reference': {
-        console.log('reference', key, value);
         if (typeof value !== 'object') {
           throw new Error(`Sanitization failed - Field "${key}" with value "${value}" is not a valid Mongo ID`);
         }

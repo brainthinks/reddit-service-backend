@@ -128,7 +128,6 @@ module.exports = {
     },
   },
   rules: {
-    // default
     'node/exports-style': [
       'error',
       'module.exports',
@@ -163,10 +162,10 @@ module.exports = {
     ],
     'node/prefer-promises/dns': 'error',
     'node/prefer-promises/fs': 'error',
-    // custom
     'node/no-unsupported-features/es-syntax': [
       'off',
     ],
+    'node/shebang': 'off',
     ...rules,
   },
 };

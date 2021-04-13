@@ -12,19 +12,25 @@ import session from 'express-session';
 import connectRedis from 'connect-redis';
 
 import { TYPES } from '../../types';
-import { Logger } from '../../interfaces';
+import {
+  Logger,
+  Config,
+} from '../../interfaces';
 import AuthenticationService from './service';
 
 @injectable()
 export default class AuthenticationController {
   logger: Logger;
+  config: Config;
   authenticationService: AuthenticationService;
 
   constructor (
     @inject(TYPES.Logger) logger: Logger,
+    @inject(TYPES.Config) config: Config,
     @inject(TYPES.AuthenticationService) authenticationService: AuthenticationService,
   ) {
     this.logger = logger;
+    this.config = config;
     this.authenticationService = authenticationService;
   }
 
@@ -32,9 +38,8 @@ export default class AuthenticationController {
   initializeApp (app: Express): void {
     const RedisStore = connectRedis(session);
     const redisClient = redis.createClient({
-      // @todo - read these from .env
-      host: 'redis',
-      port: 6379,
+      host: this.config.redisHostname,
+      port: this.config.redisPort,
     });
 
     redisClient.on('error', (error) => {
@@ -61,13 +66,14 @@ export default class AuthenticationController {
     }));
 
     passport.serializeUser((user: any, cb) => {
-      cb(null, user._id);
+      const serializedUser = this.authenticationService.serializeUser(user);
+
+      cb(null, serializedUser);
     });
 
-    passport.deserializeUser(async (id, cb) => {
+    passport.deserializeUser(async (serializedUser: string, cb) => {
       try {
-        // @todo - decouple this
-        const user = await this.authenticationService.userService.collection.findOne({ _id: id });
+        const user = await this.authenticationService.deserializeUser(serializedUser);
 
         cb(null, user);
       }
@@ -83,13 +89,6 @@ export default class AuthenticationController {
       resave: false,
       saveUninitialized: false,
     }));
-    app.use(function (req, res, next) {
-      console.log(req.session);
-      // if (!req.session) {
-      //   return next(new Error('oh no')) // handle error
-      // }
-      next(); // otherwise continue
-    });
 
     app.use(passport.initialize());
     app.use(passport.session());
@@ -123,7 +122,7 @@ export default class AuthenticationController {
     }
   }
 
-  async login (req: Request, res: Response, next: NextFunction) {
+  async login (req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       await new Promise<void>((resolve, reject) => {
         passport.authenticate('local')(req, res, (error: Error) => {
@@ -142,7 +141,7 @@ export default class AuthenticationController {
     }
   }
 
-  async logout (req: Request, res: Response, next: NextFunction) {
+  async logout (req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       req.logout();
       res.status(200).send({ loggedOut: true });
