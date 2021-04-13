@@ -62,7 +62,7 @@ export default class Scheduler {
     ] = newsletter.sendAt.split(':');
 
     // this.jobs[id] = cron.schedule('* * * * *', async () => {
-    this.jobs[id] = cron.schedule(`${Number(minute)} ${Number(hour)} * * *`, () => {
+    this.jobs[id] = cron.schedule(`${Number(minute)} ${Number(hour)} * * *`, async () => {
       try {
         const payload = await this.generateEmailContent(user, newsletter);
         await this.send(payload);
