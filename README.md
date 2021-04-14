@@ -35,12 +35,19 @@ Update scheduled newsletter email time (format is HH:MM, where hours are 0 - 23)
 
 Note the `briana` user's timezone is US East, specifically `America/New_York`.  Feel free to change it.  The supported timezones (defined by `moment-timezone`) can be fetched:
 
-`GET http://localhost/users/utils/supportedTimeZones`
+[http://localhost/users/utils/supportedTimeZones](http://localhost/users/utils/supportedTimeZones)
 
 `PATCH http://localhost/users/briana { "timezone": <timezone> }`
 
 That's it!  Once you have the test data loaded and "sendAt" set to your desired time, you can sit back and watch the terminal for the json output from the stub email service.
 
+If you need to reset / start from scratch, you can destroy the Docker volume that mongo uses, which will destroy all User and Newsletter records:
+
+```bash
+docker-compose down
+docker volume rm reddit_service_backend_mongo
+docker-compose up
+```
 
 ## Development
 
@@ -55,6 +62,7 @@ That's it!  Once you have the test data loaded and "sendAt" set to your desired 
 
 ## Future Improvements
 
+* lint fixes!
 * The requirements indicate that we are to use reddit's "top" posts - we should discuss using "hot" instead, because the top posts don't change often...
 * OpenAPI docs
 * The newsletter model service could be split from the scheduling service

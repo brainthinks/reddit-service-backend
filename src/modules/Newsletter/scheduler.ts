@@ -142,8 +142,14 @@ export default class Scheduler {
   }
 
   async send (payload: any) {
-    const result = await axios.post(this.config.redditEmailServiceUrl, payload);
-
-    console.log(result.data);
+    try {
+      const result = await axios.post(this.config.redditEmailServiceUrl, payload);
+    }
+    catch (error) {
+      this.logger.error([
+        error,
+        'Error sending payload to email service',
+      ]);
+    }
   }
 }
